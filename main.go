@@ -6,7 +6,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/mjibson/esc/embed"
+	"github.com/david-dever-23-box/esc/embed"
 )
 
 func main() {
