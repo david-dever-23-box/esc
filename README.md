@@ -1,17 +1,19 @@
 # esc
 
+>This repo was forked from [github.com/mjibson/esc](https://github.com/mjibson/esc), and requires Go 1.16 or later, having removed any references to the deprecated `io/ioutil` package.
+
 [![GoDoc](https://godoc.org/github.com/mjibson/esc?status.svg)](https://godoc.org/github.com/mjibson/esc)
 
-esc embeds files into go programs and provides http.FileSystem interfaces
-to them.
+**esc** embeds files into Go executables and provides `http.FileSystem` interfaces
+to them. It adds all named files or files recursively under named directories at the
+path specified. 
 
-It adds all named files or files recursively under named directories at the
-path specified. The output file provides an http.FileSystem interface with
+The output file provides an `http.FileSystem` interface with
 zero dependencies on packages outside the standard library.
 
 ## Installation
 
-`go get -u github.com/mjibson/esc`
+`go get -u github.com/david-dever-23-box/esc`
 
 ## Usage
 
@@ -40,23 +42,22 @@ The flags are:
 
 ## Accessing Embedded Files
 
-After producing an output file, the assets may be accessed with the FS()
+After producing an output file, the assets may be accessed with the `FS()`
 function, which takes a flag to use local assets instead (for local
 development).
 
- * (_esc)?FS(Must)?(Byte|String) returns an asset as a (byte slice|string).
- * (_esc)?FSMust(Byte|String) panics if the asset is not found.
+ * `(_esc)?FS(Must)?(Byte|String)` returns an asset as a (byte slice|string).
+ * `(_esc)?FSMust(Byte|String)` panics if the asset is not found.
 
 ## Go Generate
 
-esc can be invoked by go generate:
+**esc** can be invoked by `go generate`:
 
 `//go:generate esc -o static.go -pkg server static`
 
 ## Example
 
-Embedded assets can be served with HTTP using the http.FileServer.
-Assuming you have a directory structure similar to the following:
+Embedded assets can be served with HTTP using the `http.FileServer`, assuming you have a directory structure similar to the following:
 
 ```
 .
@@ -67,7 +68,7 @@ Assuming you have a directory structure similar to the following:
     └── index.html
 ```
 
-Where main.go contains:
+Where `main.go` contains:
 
 ```
 package main
@@ -91,6 +92,6 @@ func main() {
 	`go run main.go static.go`
 3. Access http://localhost:8080/static/index.html to view the files.
 
-You can see worked example in [example](example) dir
+You can see a working example in the [example](example) dir;
 just run it as
-`go run example/main.go example/static.go`
+`go run example/main.go example/static.go`.

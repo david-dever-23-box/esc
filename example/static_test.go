@@ -3,9 +3,9 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"reflect"
 	"sort"
 	"strings"
@@ -118,12 +118,12 @@ func testFSOpen(useLocal bool, t *testing.T) {
 				// because all check after only for case when fs.Open return non-err
 				return
 			}
-			raw, err := ioutil.ReadAll(got)
+			raw, err := io.ReadAll(got)
 			if err != nil {
 				t.Errorf("%q. _escLocalFS.Read should not return error. got error = %v,", tt.name, err)
 				return
 			}
-			originalFileRaw, err := ioutil.ReadFile("../testdata" + tt.name)
+			originalFileRaw, err := os.ReadFile("../testdata" + tt.name)
 
 			if !bytes.Equal(originalFileRaw, raw) {
 				t.Errorf("%q. _escLocalFS.Open() = %s, want %s", tt.name, raw, originalFileRaw)
@@ -178,7 +178,7 @@ func testFSReaddir(useLocal bool, t *testing.T) {
 			sort.Strings(tt.wantFileNames)
 
 			if tt.count > -1 {
-				//workaround for case when we have limit, because of different Readdir cannot return in the same order, and nobody garanty ordering for Readdir
+				// workaround for case when we have limit, because of different Readdir cannot return in the same order, and nobody garanty ordering for Readdir
 				if len(fnames) != len(tt.wantFileNames) {
 					t.Errorf("%q. _escLocalFS.Readdir() return different counts of res = %d, want %d", tt.name, len(fnames), len(tt.wantFileNames))
 				}
@@ -208,8 +208,7 @@ func testFSMustString(useLocal bool, t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("%s:uselocal=%t", tt.name, useLocal), func(t *testing.T) {
-
-			raw, _ := ioutil.ReadFile("../testdata" + tt.name)
+			raw, _ := os.ReadFile("../testdata" + tt.name)
 			got := FSMustString(useLocal, tt.name)
 			if strings.Compare(got, string(raw)) != 0 {
 				t.Errorf("%q. FSMustString() = %s, want %s", tt.name, got, raw)
@@ -224,7 +223,6 @@ func testFSMustString(useLocal bool, t *testing.T) {
 			if strings.Compare(got, got2) != 0 {
 				t.Errorf("%q. FSString() must return the same as FSMustString, given = %v, must be = %v", tt.name, got2, got)
 			}
-
 		})
 	}
 }

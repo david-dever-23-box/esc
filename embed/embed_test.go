@@ -6,7 +6,7 @@ import (
 	"compress/gzip"
 	"encoding/base64"
 	"io"
-	"io/ioutil"
+	"os"
 	"strings"
 	"testing"
 )
@@ -25,7 +25,6 @@ func Test_canonicFileName(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-
 			if got := canonicFileName(tt.fname, tt.prefix); got != tt.want {
 				t.Errorf("%q. canonicFileName() = %v, want %v", tt.name, got, tt.want)
 			}
@@ -34,7 +33,7 @@ func Test_canonicFileName(t *testing.T) {
 }
 
 func TestRun(t *testing.T) {
-	o := ioutil.Discard
+	o := io.Discard
 
 	tests := []struct {
 		name    string
@@ -78,7 +77,7 @@ func TestDirOrder(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := buf.String()
-	expect, _ := ioutil.ReadFile("../testdata/empty.expect")
+	expect, _ := os.ReadFile("../testdata/empty.expect")
 
 	if got != string(expect) {
 		t.Fatalf("got %s\nexpected %s", got, expect)
@@ -126,9 +125,9 @@ func decompress(compressed string) []byte {
 	if err != nil {
 		panic("error occured in decompress, gzip.NewReader: " + err.Error())
 	}
-	data, err := ioutil.ReadAll(gr)
+	data, err := io.ReadAll(gr)
 	if err != nil {
-		panic("error occured in decompress, ioutil.ReadAll: " + err.Error())
+		panic("error occured in decompress, io.ReadAll: " + err.Error())
 	}
 	return data
 }
